@@ -1,2 +1,2 @@
-# vortex
+# Vortex
 Vortex Natural Language Database
