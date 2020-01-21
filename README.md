@@ -1,7 +1,7 @@
 # Vortex
 Vortex Natural Language Database
 
-#Usage
+# Usage
 
     import vortex.core
 
