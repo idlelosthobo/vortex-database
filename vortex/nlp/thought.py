@@ -1,5 +1,5 @@
-from vortex.object.data import Data
-from vortex.object.sentence import Sentence
+from vortex.nlp.data import Data
+from vortex.nlp.sentence import Sentence
 from drugen.logic.interpret import read_words
 
 

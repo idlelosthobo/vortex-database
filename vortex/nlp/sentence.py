@@ -1,4 +1,4 @@
-from vortex.object.word import Word
+from vortex.nlp.word import Word
 
 
 class Sentence:

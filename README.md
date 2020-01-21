@@ -3,9 +3,10 @@ Vortex Natural Language Database
 
 # Usage
 
-    import vortex.core
+    import vortex.core.instance as vortex
 
-    vdb = vortex.core.Core('testing')
+    vdb = vortex('testing')
 
     while vdb:
-        vdb.string_input(input('Input: '))
+        vdb.input_as_str(input('Input: '))
+        print(vdb.result_as_str())
