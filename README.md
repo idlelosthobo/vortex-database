@@ -5,7 +5,7 @@ Vortex Natural Language Database
 
     import vortex.core.instance as vortex
 
-    vdb = vortex('testing')
+    vdb = vortex.Instance('testing')
 
     while vdb:
         vdb.input_as_str(input('Input: '))

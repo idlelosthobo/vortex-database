@@ -1,3 +1,7 @@
-import vortex.core.instance
+import vortex.core.instance as vortex
 
-vdb = vortex.core.instance.Instance('string_sample')
+vdb = vortex.Instance('testing')
+
+while vdb:
+    vdb.input_as_str(input('Input: '))
+    print(vdb.result_as_str())
