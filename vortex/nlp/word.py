@@ -1,25 +1,31 @@
-from vortex.loc.english_canada.common import common_words
+from ..nlp.operation import Operation
+from ..locale.find import find_word
 
-
-class Word:
+class Word(Operation):
 
     def __init__(self, _value):
         self._value = _value
         self.lower_value = _value.lower()
         self._identified = False
-        self._type = ''
-        self._intention = ''
         if self.lower_value[-2:] != 'ss' and self.lower_value[-1:] == 's':
             self._plural = True
         else:
             self._plural = False
 
-    def get_definition(self):
-        for definition in common_words:
-            if definition.compare_word(self._value, 75):
-                self._type = definition.get_type()
-                self._intention = definition.get_intention()
-                self._identified = True
+
+    def compare_word(self, input_string, required_accuracy):
+        for word in self._words:
+            accuracy = 0
+            if len(input_string) == len(word):
+                if input_string == word:
+                    accuracy = 100
+                else:
+                    match_value = 100 / len(word)
+                    for i in range(len(word)):
+                        if input_string[i] == word[i]:
+                            accuracy += match_value
+            if accuracy >= required_accuracy:
+                return True
 
     def identified(self):
         return self._identified

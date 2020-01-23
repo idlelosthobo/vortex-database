@@ -1,13 +1,13 @@
 from vortex.nlp.word import Word
+from vortex.nlp.operation import Operation
 
 
-class Sentence:
+class Sentence(Operation):
 
     def __init__(self, _value):
         self._value = _value
         self._words = []
         split_words = str.split(_value, ' ')
-        self.word_count = len(split_words)
         for split_words_keyword, split_words_value in enumerate(split_words):
             self._words.append(Word(split_words_value))
 
@@ -15,7 +15,7 @@ class Sentence:
         return self._value
 
     def get_word_count(self):
-        return self.word_count
+        return len(self.words)
 
     def understand(self):
         for word in self._words:
