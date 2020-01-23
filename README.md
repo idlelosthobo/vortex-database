@@ -1,5 +1,5 @@
 # Vortex
-Vortex Natural Language Database
+Natural Language Database
 
 # Usage
 
