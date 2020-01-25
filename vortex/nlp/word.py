@@ -1,5 +1,11 @@
 from ..nlp.operation import Operation
-from ..locale.find import find_word
+from ..settings import PACKAGE_NAME, LOCALE
+from importlib import import_module
+
+locale_input = import_module(PACKAGE_NAME + '.locale.' + LOCALE + '.input')
+locale_output = import_module(PACKAGE_NAME + '.locale.' + LOCALE + '.output')
+locale_words = import_module(PACKAGE_NAME + '.locale.' + LOCALE + '.words')
+
 
 class Word(Operation):
 
@@ -7,25 +13,17 @@ class Word(Operation):
         self._value = _value
         self.lower_value = _value.lower()
         self._identified = False
+        self._accuracy = 0
+        self._type = None
         if self.lower_value[-2:] != 'ss' and self.lower_value[-1:] == 's':
             self._plural = True
+            self.lower_value = _value[:-1].lower()
         else:
             self._plural = False
+            self.lower_value = _value.lower()
 
-
-    def compare_word(self, input_string, required_accuracy):
-        for word in self._words:
-            accuracy = 0
-            if len(input_string) == len(word):
-                if input_string == word:
-                    accuracy = 100
-                else:
-                    match_value = 100 / len(word)
-                    for i in range(len(word)):
-                        if input_string[i] == word[i]:
-                            accuracy += match_value
-            if accuracy >= required_accuracy:
-                return True
+    def compare_word(self):
+        pass
 
     def identified(self):
         return self._identified

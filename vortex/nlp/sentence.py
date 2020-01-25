@@ -1,5 +1,5 @@
-from vortex.nlp.word import Word
-from vortex.nlp.operation import Operation
+from ..nlp.word import Word
+from ..nlp.operation import Operation
 
 
 class Sentence(Operation):
