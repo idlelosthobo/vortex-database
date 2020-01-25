@@ -1,7 +1,8 @@
-BASIC_OUTPUT_TRIGGERS = {
+BASIC_OUTPUT = {
+    'how many',
     'is there',
 }
 
-ADVANCED_OUTPUT_TRIGGERS = {
+ADVANCED_OUTPUT = {
     'how many have we'
 }

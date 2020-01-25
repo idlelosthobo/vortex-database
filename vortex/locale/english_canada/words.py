@@ -1,10 +1,10 @@
-BASIC_WORD_TRIGGERS = {
+BASIC_WORDS = {
     'i',
     'there',
     'is',
 }
 
-ADVANCED_WORD_TRIGGERS = {
+ADVANCED_WORDS = {
     'maybe',
     'we',
 }

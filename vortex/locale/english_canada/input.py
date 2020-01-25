@@ -1,7 +1,8 @@
-BASIC_INPUT_TRIGGERS = {
+BASIC_INPUT = {
+    'i',
     'there is',
 }
 
-ADVANCED_INPUT_TRIGGERS = {
+ADVANCED_INPUT = {
     'i would like to'
 }
