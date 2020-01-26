@@ -2,6 +2,7 @@ import os
 from ..settings import INSTANCES_DIRECTORY
 from ..api.string import process
 from ..nlp.thought import Thought
+from ..db.data import Data
 
 
 class Instance:
@@ -20,8 +21,7 @@ class Instance:
         if not os.path.isfile(self.data_file_location):
             open(self.data_file_location, 'x')
 
-        self.seek = open(self.seek_file_location, 'rb+')
-        self.data = open(self.data_file_location, 'rb+')
+        self.data = Data(self.seek_file_location, self.data_file_location)
 
         print(self.name)
 
@@ -38,6 +38,8 @@ class Instance:
 
     def input_as_string(self, value_str):
         self.thought = Thought(process(value_str))
+        self.thought.process()
+        print(self.thought.get_data_set())
         if value_str == 'quit':
             self.run = False
 
