@@ -11,4 +11,5 @@
         32 to 63 : the amount of data items in the data file for that character set.
 # Data Structure
     Positioned based on settings variable "DATA_SIZE" in bytes
-        0 to DATA_SIZE : Contains the data set inserted in this specific location.
+        0 to 31   : Value that was used to store this data set
+        32 to END : Contains the data set inserted in this specific location.
