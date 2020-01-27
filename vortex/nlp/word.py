@@ -22,6 +22,7 @@ class Word(Operation):
         self._identified = False
         self._action = False
         self._plural = False
+        self._number = False
         self._accuracy = 0
         self._type = None
         self._data_set = {}
@@ -30,7 +31,10 @@ class Word(Operation):
             self._plural = True
             self.trigger_value = _value[:-1].lower()
 
-        if self.trigger_value in locale_words.BASIC_WORDS:
+        if self.trigger_value.isnumeric():
+            self._number = True
+            self._data_set['number'] = self.trigger_value
+        elif self.trigger_value in locale_words.BASIC_WORDS:
             self._identified = True
         elif self.trigger_value in locale_actions.BASIC_ACTIONS:
             self._action = True

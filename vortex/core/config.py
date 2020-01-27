@@ -19,6 +19,6 @@ def iteration():
 
 
 def file_header():
-    header = 'application: ' + APP_NAME + ' version: ' + APP_VERSION + ' data size: ' + str(DATA_SIZE)
+    header = 'application: ' + APP_NAME + ' version: ' + APP_VERSION + ' seek: 64 data: ' + str(DATA_SIZE)
     return header
 

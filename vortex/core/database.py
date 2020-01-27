@@ -57,7 +57,7 @@ class Database:
         pass
 
     def add_data(self, data_set):
-        self._file_data.write('hello')
+        self._data.write('hello')
         pass
 
     def read_seek(self):
@@ -73,6 +73,13 @@ class Database:
         byte_size = 64
         seek_ascii_list = itertools.product(string.ascii_lowercase, repeat=3)
         for seek_ascii_item in seek_ascii_list:
+            file.seek(byte_location)
+            file.write('0')
+            file.seek(byte_location + 32)
+            file.write('0')
+            byte_location += byte_size
+        seek_numbers_list = itertools.product('0123456789', repeat=3)
+        for seek_number_item in seek_numbers_list:
             file.seek(byte_location)
             file.write('0')
             file.seek(byte_location + 32)
