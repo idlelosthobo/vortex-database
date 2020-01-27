@@ -5,6 +5,7 @@ BASIC_ACTIONS = {
     'rent',
     'pay',
     'purchase',
+    'want',
 }
 
 ADVANCED_ACTIONS = {

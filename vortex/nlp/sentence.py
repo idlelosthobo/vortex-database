@@ -1,21 +1,23 @@
 from ..nlp.word import Word
 from ..nlp.operation import Operation
 from ..core import config
-from ..settings import PACKAGE_NAME, LOCALE
+from ..settings import APP_NAME, LOCALE
 from importlib import import_module
 
-locale_input = import_module(PACKAGE_NAME + '.locale.' + LOCALE + '.input')
-locale_output = import_module(PACKAGE_NAME + '.locale.' + LOCALE + '.output')
+locale_input = import_module(APP_NAME + '.locale.' + LOCALE + '.input')
+locale_output = import_module(APP_NAME + '.locale.' + LOCALE + '.output')
+
 
 class Sentence(Operation):
 
     def __init__(self, _value):
         self.raw_value = _value
+        self.clean_value = self.clean(_value)
         self.trigger_value = ''
         self.input_identified = False
         self.output_identified = False
         self._words = []
-        split_words = str.split(_value, ' ')
+        split_words = str.split(self.clean_value, ' ')
         for split_words_keyword, split_words_value in enumerate(split_words):
             self._words.append(Word(split_words_value))
         for word in self._words:
@@ -44,10 +46,16 @@ class Sentence(Operation):
         for word in self._words:
             word.get_definition()
 
+    def clean(self, value):
+        clean_value = value.replace(',', '')
+        clean_value = clean_value.replace('"', '')
+        return clean_value
+
     def show_understanding(self):
         understanding = 0.0
         per_word_understanding = 100.0 / len(self._words)
         for word in self._words:
             if word.identified():
                 understanding += per_word_understanding
-        print(understanding, '% understood')
+        print('' + str(understanding) + '% understood')
+

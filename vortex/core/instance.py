@@ -2,7 +2,7 @@ import os
 from ..settings import INSTANCES_DIRECTORY
 from ..api.string import process
 from ..nlp.thought import Thought
-from ..db.data import Data
+from vortex.core.database import Database
 
 
 class Instance:
@@ -15,13 +15,7 @@ class Instance:
             os.mkdir(INSTANCES_DIRECTORY)
             os.mkdir(self.instance_directory)
 
-        if not os.path.isfile(self.seek_file_location):
-            open(self.seek_file_location, 'x')
-
-        if not os.path.isfile(self.data_file_location):
-            open(self.data_file_location, 'x')
-
-        self.data = Data(self.seek_file_location, self.data_file_location)
+        self.data = Database(self.seek_file_location, self.data_file_location)
 
         print(self.name)
 
@@ -39,12 +33,12 @@ class Instance:
     def input_as_string(self, value_str):
         self.thought = Thought(process(value_str))
         self.thought.process()
-        print(self.thought.get_data_set())
+        self.data.add_data(self.thought.get_data_set())
         if value_str == 'quit':
             self.run = False
 
     def result_as_string(self):
-        pass
+        return self.thought.get_data_set()
 
     def __bool__(self):
         return self.run

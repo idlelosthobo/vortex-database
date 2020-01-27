@@ -1,3 +1,5 @@
+# object is a trigger to use the relative objects in the sentence as the descriptor.
+
 BASIC_QUANTIFY = {
     'good': '5 rating',
     'worst': '0 rating',
@@ -9,6 +11,7 @@ BASIC_QUANTIFY = {
     'bunch': '6 object',
     'barrel': '200 litre',
     'feet': '12 inch',
+    'some': '5 object',
 }
 
 ADVANCED_QUANTIFY = {

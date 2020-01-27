@@ -24,13 +24,25 @@ class Thought(Operation):
     def get_value(self):
         return self._value
 
+    def generate_time_iteration(self):
+        if config.iteration() == 'second':
+            return round(time.time())
+        if config.iteration() == 'minute':
+            return round(time.time() / 60)
+        elif config.iteration() == 'hour':
+            return round(time.time() / 60 / 60)
+        elif config.iteration() == 'day':
+            return round(time.time() / 60 / 60 / 24)
+        else:
+            return 0
+
     def process(self):
         for sentence in self._sentences:
             if sentence.input_identified:
                 input_data_set = {}
                 for word in sentence.get_words():
                     input_data_set.update(word.get_data_set())
-                input_data_set['time_entered'] = time.time()
+                input_data_set['time_entered'] = self.generate_time_iteration()
                 self.data_set.append(dict(input_data_set))
 
             if sentence.output_identified:

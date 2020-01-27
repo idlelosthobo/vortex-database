@@ -1,11 +1,11 @@
 from ..nlp.operation import Operation
-from ..settings import PACKAGE_NAME, LOCALE
+from ..settings import APP_NAME, LOCALE
 from importlib import import_module
 from ..core import config
 
-locale_words = import_module(PACKAGE_NAME + '.locale.' + LOCALE + '.words')
-locale_quantify = import_module(PACKAGE_NAME + '.locale.' + LOCALE + '.quantify')
-locale_actions = import_module(PACKAGE_NAME + '.locale.' + LOCALE + '.actions')
+locale_words = import_module(APP_NAME + '.locale.' + LOCALE + '.words')
+locale_quantify = import_module(APP_NAME + '.locale.' + LOCALE + '.quantify')
+locale_actions = import_module(APP_NAME + '.locale.' + LOCALE + '.actions')
 
 
 class Word(Operation):
