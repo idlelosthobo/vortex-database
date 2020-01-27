@@ -18,6 +18,10 @@ def iteration():
     return DATE_ITERATION
 
 
+def data_size():
+    return DATA_SIZE
+
+
 def file_header():
     header = 'application: ' + APP_NAME + ' version: ' + APP_VERSION + ' seek: 64 data: ' + str(DATA_SIZE)
     return header
