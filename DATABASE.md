@@ -1,7 +1,7 @@
 # Data File Header
     Postioned at byte 0 and is 64 bytes long 
 # Seek Structure
-    The seek file directly references a 4 character set in the locale language.
+    The seek file directly references a 3 character set in the locale language.
         Example  : "a" would be at byte 64, "ac" would be at byte 192
         
     This structure is static and generate when the file is created.

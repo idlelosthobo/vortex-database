@@ -82,22 +82,35 @@ class Database:
         if value.isnumeric():
             seek_int_value = 0
             for x in range(self._seek_char_size):
-                if x < (len(seek_value) - 1):
-                    seek_int_value += 26 * 26
+                if x < (self._seek_char_size - 1):
+                    seek_int_value += 26 * (26 ** (self._seek_char_size - 1))
                 else:
                     seek_int_value += 27
+                if config.debug():
+                    print(str(x) + ': ' + str(seek_int_value))
+            for x in range(len(seek_value)):
+                if x < (self._seek_char_size - 1):
+                    seek_int_value += int(seek_value[x]) * (10 ** (self._seek_char_size - 1))
+                else:
+                    seek_int_value += int(seek_value[x])
+                if config.debug():
+                    print(str(x) + ': ' + str(seek_int_value))
             seek_location_byte = seek_int_value * self._seek_byte_size
+            if config.debug():
+                print("Seek Value: " + seek_value + ' ' + str(seek_int_value))
         else:
             seek_char_value = 0
             for x in range(len(seek_value)):
-                if x < (len(seek_value) - 1):
-                    seek_char_value += (ord(seek_value[x]) - 97) * 26
+                if x < (self._seek_char_size - 1):
+                    seek_char_value += (ord(seek_value[x]) - 97) * (26 ** (self._seek_char_size - 1))
                 else:
                     seek_char_value += (ord(seek_value[x]) - 97)
+                if config.debug():
+                    print(str(x) + ': ' + str(seek_char_value))
             seek_location_byte = seek_char_value * self._seek_byte_size
-
-            print(str(x) + ': ' + str(seek_char_value))
-        print("Seek Value: " + seek_value + ' ' + str(seek_char_value))
+            if config.debug():
+                print("Seek Value: " + seek_value + ' ' + str(seek_char_value))
+        return (seek_location_byte * self._seek_byte_size) + self._header_byte_size
 
     def build_new_seek(self, file):
         import itertools
