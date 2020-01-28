@@ -79,12 +79,22 @@ class Database:
     def get_seek_location(self, value):
         seek_location_byte = 0
         seek_value = value[:self._seek_char_size]
-        seek_char_value = 0
-        for x in range(len(seek_value)):
-            if x < (len(seek_value) - 1):
-                seek_char_value += (ord(seek_value[x]) - 97) * 26
-            else:
-                seek_char_value += (ord(seek_value[x]) - 97)
+        if value.isnumeric():
+            seek_int_value = 0
+            for x in range(self._seek_char_size):
+                if x < (len(seek_value) - 1):
+                    seek_int_value += 26 * 26
+                else:
+                    seek_int_value += 27
+            seek_location_byte = seek_int_value * self._seek_byte_size
+        else:
+            seek_char_value = 0
+            for x in range(len(seek_value)):
+                if x < (len(seek_value) - 1):
+                    seek_char_value += (ord(seek_value[x]) - 97) * 26
+                else:
+                    seek_char_value += (ord(seek_value[x]) - 97)
+            seek_location_byte = seek_char_value * self._seek_byte_size
 
             print(str(x) + ': ' + str(seek_char_value))
         print("Seek Value: " + seek_value + ' ' + str(seek_char_value))
