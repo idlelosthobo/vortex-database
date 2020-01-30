@@ -66,7 +66,10 @@ class Database:
         for data in data_set:
             for data_key, data_value in data.items():
                 print('Data: ' + str(data_key) + ' ' + str(data_value))
-                self.get_seek_location(str(data_value))
+                seek_byte_location = self.get_seek_location(str(data_value))
+                print('Seek Byte: ' + str(seek_byte_location))
+                self._seek.seek(seek_byte_location)
+                print('"' + str(self._seek.read(seek_byte_location)))
         # self._data.write('hello')
         pass
 
@@ -110,7 +113,7 @@ class Database:
             seek_location_byte = seek_char_value * self._seek_byte_size
             if config.debug():
                 print("Seek Value: " + seek_value + ' ' + str(seek_char_value))
-        return (seek_location_byte * self._seek_byte_size) + self._header_byte_size
+        return seek_location_byte + self._header_byte_size
 
     def build_new_seek(self, file):
         import itertools
