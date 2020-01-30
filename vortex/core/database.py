@@ -30,6 +30,7 @@ class Database:
                 print('Failed to create data file')
 
         self._seek = open(_seek_file_location, 'r+', encoding='utf-8')
+        self.build_new_seek(self._seek)
         self._data = open(_data_file_location, 'r+', encoding='utf-8')
         self._seek_header_validated = self.check_header(self._seek, self._seek_file_location)
         self._data_header_validated = self.check_header(self._data, self._data_file_location)
@@ -69,7 +70,16 @@ class Database:
                 seek_byte_location = self.get_seek_location(str(data_value))
                 print('Seek Byte: ' + str(seek_byte_location))
                 self._seek.seek(seek_byte_location)
-                print('"' + str(self._seek.read(seek_byte_location)))
+                data_start = str(self._seek.read(int(self._seek_byte_size / 2)).rstrip('\x00'))
+                self._seek.seek(seek_byte_location + (int(self._seek_byte_size / 2)))
+                data_count = str(self._seek.read(int(self._seek_byte_size / 2)).rstrip('\x00'))
+                self._seek.seek(seek_byte_location)
+                print('"' + str(self._seek.read(64)) + '"')
+                print('Start: ' + str(data_start) + ' Count: ' + str(data_count))
+                self._data.seek(seek_byte_location)
+                self._data.write(str(data_key) + '|' + str(data_value))
+                self._data.seek(seek_byte_location + 32)
+                self._data.write(str(list(data_set)))
         # self._data.write('hello')
         pass
 
@@ -86,14 +96,14 @@ class Database:
             seek_int_value = 0
             for x in range(self._seek_char_size):
                 if x < (self._seek_char_size - 1):
-                    seek_int_value += 26 * (26 ** (self._seek_char_size - 1))
+                    seek_int_value += 25 * (26 ** (self._seek_char_size - (1 + x)))
                 else:
-                    seek_int_value += 27
+                    seek_int_value += 26
                 if config.debug():
                     print(str(x) + ': ' + str(seek_int_value))
             for x in range(len(seek_value)):
                 if x < (self._seek_char_size - 1):
-                    seek_int_value += int(seek_value[x]) * (10 ** (self._seek_char_size - 1))
+                    seek_int_value += int(seek_value[x]) * (10 ** (self._seek_char_size - (1 + x)))
                 else:
                     seek_int_value += int(seek_value[x])
                 if config.debug():
@@ -105,7 +115,7 @@ class Database:
             seek_char_value = 0
             for x in range(len(seek_value)):
                 if x < (self._seek_char_size - 1):
-                    seek_char_value += (ord(seek_value[x]) - 97) * (26 ** (self._seek_char_size - 1))
+                    seek_char_value += (ord(seek_value[x]) - 97) * (26 ** (self._seek_char_size - (1 + x)))
                 else:
                     seek_char_value += (ord(seek_value[x]) - 97)
                 if config.debug():
@@ -122,14 +132,18 @@ class Database:
         seek_ascii_list = itertools.product(string.ascii_lowercase, repeat=self._seek_char_size)
         for seek_ascii_item in seek_ascii_list:
             file.seek(byte_location)
-            file.write('0')
+            # file.write('0')
+            file.write(str(seek_ascii_item))
             file.seek(byte_location + (self._seek_byte_size / 2))
             file.write('0')
             byte_location += self._seek_byte_size
         seek_numbers_list = itertools.product('0123456789', repeat=self._seek_char_size)
+        print(byte_location)
         for seek_number_item in seek_numbers_list:
             file.seek(byte_location)
-            file.write('0')
+            # file.write('0')
+            file.write(str(seek_number_item))
             file.seek(byte_location + (self._seek_byte_size / 2))
             file.write('0')
             byte_location += self._seek_byte_size
+        print(byte_location)
