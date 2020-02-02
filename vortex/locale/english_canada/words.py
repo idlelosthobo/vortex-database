@@ -3,7 +3,8 @@ BASIC_WORDS = {
     'there',
     'is',
     'you',
-
+    'how',
+    'many',
 }
 
 ADVANCED_WORDS = {

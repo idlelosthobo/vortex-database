@@ -1,4 +1,4 @@
-from ..settings import DEBUG, ADVANCED_PROCESSING, ASSUMPTIVE_UNDERSTANDING, DATE_ITERATION, APP_VERSION, DATA_SIZE,\
+from ..settings import DEBUG, ADVANCED_PROCESSING, ASSUMPTIVE_UNDERSTANDING, TIME_ITERATION, APP_VERSION, \
     APP_NAME
 
 
@@ -15,14 +15,10 @@ def assumptive():
 
 
 def iteration():
-    return DATE_ITERATION
-
-
-def data_size():
-    return DATA_SIZE
+    return TIME_ITERATION
 
 
 def file_header():
-    header = 'application: ' + APP_NAME + ' version: ' + APP_VERSION + ' seek: 64 data: ' + str(DATA_SIZE)
+    header = 'application: ' + APP_NAME + ' version: ' + APP_VERSION + ' time: ' + TIME_ITERATION
     return header
 

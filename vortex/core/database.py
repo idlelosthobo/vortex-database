@@ -4,13 +4,12 @@ from vortex.core import config
 
 class Database:
 
-    def __init__(self, _seek_file_location, _data_file_location):
+    def __init__(self, _seek_file_location, _data_directory):
         self._header_byte_size = 64
-        self._seek_byte_size = 64
+        self._seek_byte_size = 32
         self._seek_char_size = 3
-        self._data_byte_size = config.data_size()
         self._seek_file_location = _seek_file_location
-        self._data_file_location = _data_file_location
+        self._data_directory = _data_directory
         self._header_length = len(config.file_header())
         self.database_ok = False
         if not os.path.isfile(_seek_file_location):
@@ -23,19 +22,17 @@ class Database:
             except:
                 print('Failed to create seek file')
 
-        if not os.path.isfile(_data_file_location):
-            try:
-                open(_data_file_location, 'x')
-            except:
-                print('Failed to create data file')
-
+        if os.path.isdir(_data_directory):
+            print('Failed to find data directory')
+            self._data_directory_validated = False
+        else:
+            print('Directory found')
+            self._data_directory_validated = True
         self._seek = open(_seek_file_location, 'r+', encoding='utf-8')
         self.build_new_seek(self._seek)
-        self._data = open(_data_file_location, 'r+', encoding='utf-8')
         self._seek_header_validated = self.check_header(self._seek, self._seek_file_location)
-        self._data_header_validated = self.check_header(self._data, self._data_file_location)
 
-        if self._seek_header_validated and self._data_header_validated:
+        if self._seek_header_validated and self._data_directory_validated:
             self.database_ok = True
 
         if config.debug():
@@ -68,18 +65,25 @@ class Database:
             for data_key, data_value in data.items():
                 print('Data: ' + str(data_key) + ' ' + str(data_value))
                 seek_byte_location = self.get_seek_location(str(data_value))
-                print('Seek Byte: ' + str(seek_byte_location))
-                self._seek.seek(seek_byte_location)
-                data_start = str(self._seek.read(int(self._seek_byte_size / 2)).rstrip('\x00'))
-                self._seek.seek(seek_byte_location + (int(self._seek_byte_size / 2)))
-                data_count = str(self._seek.read(int(self._seek_byte_size / 2)).rstrip('\x00'))
-                self._seek.seek(seek_byte_location)
-                print('"' + str(self._seek.read(64)) + '"')
-                print('Start: ' + str(data_start) + ' Count: ' + str(data_count))
-                self._data.seek(seek_byte_location)
-                self._data.write(str(data_key) + '|' + str(data_value))
-                self._data.seek(seek_byte_location + 32)
-                self._data.write(str(list(data_set)))
+                print('Seek Byte: ' + str(seek_byte_location * self._seek_byte_size))
+                self._seek.seek(seek_byte_location * self._seek_byte_size)
+                data_count = int(str(self._seek.read(int(self._seek_byte_size)).rstrip('\x00')))
+                self._seek.seek(seek_byte_location * self._seek_byte_size)
+                print('"' + str(self._seek.read(self._seek_byte_size)) + '"')
+                print('Data Count: ' + str(data_count))
+                data_file_location = os.path.join(self._data_directory, str(seek_byte_location) + '.vdb')
+                if data_count == 0:
+                    if not os.path.isfile(data_file_location):
+                        open(data_file_location, 'x')
+                data_file = open(data_file_location, 'a')
+                data_file.write(str(data_key) + ',' + str(data_value) + '|' + str(list(data_set)) + '\n')
+                data_file.close()
+                self._seek.seek(seek_byte_location * self._seek_byte_size)
+                self._seek.write(str(data_count + 1))
+                # self._data.seek(seek_byte_location)
+                # self._data.write(str(data_key) + '|' + str(data_value))
+                # self._data.seek(seek_byte_location + 32)
+                # self._data.write(str(list(data_set)))
         # self._data.write('hello')
         pass
 
@@ -90,7 +94,7 @@ class Database:
         pass
 
     def get_seek_location(self, value):
-        seek_location_byte = 0
+        seek_location = 0
         seek_value = value[:self._seek_char_size]
         if value.isnumeric():
             seek_int_value = 0
@@ -108,9 +112,9 @@ class Database:
                     seek_int_value += int(seek_value[x])
                 if config.debug():
                     print(str(x) + ': ' + str(seek_int_value))
-            seek_location_byte = seek_int_value * self._seek_byte_size
+            seek_location = seek_int_value
             if config.debug():
-                print("Seek Value: " + seek_value + ' ' + str(seek_int_value))
+                print("Seek Location: " + seek_value + ' ' + str(seek_int_value))
         else:
             seek_char_value = 0
             for x in range(len(seek_value)):
@@ -120,10 +124,10 @@ class Database:
                     seek_char_value += (ord(seek_value[x]) - 97)
                 if config.debug():
                     print(str(x) + ': ' + str(seek_char_value))
-            seek_location_byte = seek_char_value * self._seek_byte_size
+            seek_location = seek_char_value
             if config.debug():
-                print("Seek Value: " + seek_value + ' ' + str(seek_char_value))
-        return seek_location_byte + self._header_byte_size
+                print("Seek Location: " + str(seek_location))
+        return seek_location + self._header_byte_size
 
     def build_new_seek(self, file):
         import itertools
@@ -132,18 +136,12 @@ class Database:
         seek_ascii_list = itertools.product(string.ascii_lowercase, repeat=self._seek_char_size)
         for seek_ascii_item in seek_ascii_list:
             file.seek(byte_location)
-            # file.write('0')
-            file.write(str(seek_ascii_item))
-            file.seek(byte_location + (self._seek_byte_size / 2))
             file.write('0')
             byte_location += self._seek_byte_size
         seek_numbers_list = itertools.product('0123456789', repeat=self._seek_char_size)
         print(byte_location)
         for seek_number_item in seek_numbers_list:
             file.seek(byte_location)
-            # file.write('0')
-            file.write(str(seek_number_item))
-            file.seek(byte_location + (self._seek_byte_size / 2))
             file.write('0')
             byte_location += self._seek_byte_size
         print(byte_location)
