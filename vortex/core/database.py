@@ -29,7 +29,7 @@ class Database:
             print('Directory found')
             self._data_directory_validated = True
         self._seek = open(_seek_file_location, 'r+', encoding='utf-8')
-        self.build_new_seek(self._seek)
+        # self.build_new_seek(self._seek)
         self._seek_header_validated = self.check_header(self._seek, self._seek_file_location)
 
         if self._seek_header_validated and self._data_directory_validated:
@@ -63,20 +63,36 @@ class Database:
             print(list(data))
             if data['data_set_type'] == 'input':
                 self.add_data(dict(data['data']))
+            elif data['data_set_type'] == 'output':
+                self.get_data(dict(data['data']))
 
-    def get_data(self, value):
-        seek_location = self.get_seek_location(value)
-        data_count = self.read_seek_count(seek_location)
-        if data_count >= 0:
-            data_file_location = os.path.join(self._data_directory, str(seek_location) + '.vdb')
-            data_file = open(data_file_location, 'r')
-            for x in range(data_count):
-                data_set = data_file.readline(x).split('|')
-                for data_key, data_value in data_set:
-                    print('Get Data: Key: ' + data_key + ' Value: ' + data_value)
-        else:
-            print('No data available on this request')
-        pass
+    def get_data(self, data_set):
+        for data_key, data_value in data_set.items():
+            seek_location = self.get_seek_location(str(data_value))
+            print('Get: Seek Location: ' + str(seek_location))
+            data_count = self.read_seek_count(seek_location)
+            print('Get: Data Count: ' + str(data_count))
+            if data_count > 0:
+                data_file_location = os.path.join(self._data_directory, str(seek_location) + '.vdb')
+                data_file = open(data_file_location, 'r')
+                data_lines = data_file.readlines()
+                number_count = 0
+                for line in data_lines:
+                    print(line)
+                    get_data_set = line.split('|')
+                    get_data_set_type = get_data_set[0].split(':')
+                    get_data_type = get_data_set_type[0]
+                    get_data_value = get_data_set_type[1]
+                    get_data_set_data = get_data_set[1].split(',')
+                    for set_data in get_data_set_data:
+                        data = set_data.split(':')
+                        if data[0] == 'number':
+                            number_count += int(data[1])
+                    print('Get: Line: ' + get_data_set[0])
+                    print('Get: Line: ' + get_data_set[1])
+                print('Get: Number Count: ' + str(number_count))
+            else:
+                print('No data available on this request')
 
     def create_data_string(self, data_set):
         data_string = ''
@@ -103,11 +119,11 @@ class Database:
             self.write_seek_count(seek_location, data_count)
 
     def read_seek_count(self, seek_location):
-        self._seek.seek(seek_location * self._seek_byte_size)
+        self._seek.seek((seek_location * self._seek_byte_size) + self._header_byte_size)
         return int(str(self._seek.read(int(self._seek_byte_size)).rstrip('\x00')))
 
     def write_seek_count(self, seek_location, data_count):
-        self._seek.seek(seek_location * self._seek_byte_size)
+        self._seek.seek((seek_location * self._seek_byte_size) + self._header_byte_size)
         self._seek.write(str(data_count + 1))
 
     def get_seek_location(self, value):
@@ -145,7 +161,7 @@ class Database:
             seek_location = seek_char_value
             if config.debug():
                 print("Seek Location: " + str(seek_location))
-        return seek_location + self._header_byte_size
+        return seek_location
 
     def build_new_seek(self, file):
         import itertools
