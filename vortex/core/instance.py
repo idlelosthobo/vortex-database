@@ -30,7 +30,7 @@ class Instance:
         self.run = True
         self.instance_directory = os.path.join(INSTANCES_DIRECTORY, str(self.name))
         self.data_directory = os.path.join(self.instance_directory, 'data')
-        self.seek_file_location = os.path.join(self.instance_directory, 'seek.vdb')
+        self.seek_file_location = os.path.join(self.instance_directory, 'seek.vsf')
         self.seek = None
         self.data = None
         self.thought = None
