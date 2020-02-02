@@ -57,46 +57,64 @@ class Database:
             print('Database ' + str(location) + ' Header Validated: ' + str(header_validated))
         return header_validated
 
+    def process_data(self, data_set):
+        print(list(data_set))
+        for data in data_set:
+            print(list(data))
+            if data['data_set_type'] == 'input':
+                self.add_data(dict(data['data']))
+
     def get_data(self, value):
+        seek_location = self.get_seek_location(value)
+        data_count = self.read_seek_count(seek_location)
+        if data_count >= 0:
+            data_file_location = os.path.join(self._data_directory, str(seek_location) + '.vdb')
+            data_file = open(data_file_location, 'r')
+            for x in range(data_count):
+                data_set = data_file.readline(x).split('|')
+                for data_key, data_value in data_set:
+                    print('Get Data: Key: ' + data_key + ' Value: ' + data_value)
+        else:
+            print('No data available on this request')
         pass
+
+    def create_data_string(self, data_set):
+        data_string = ''
+        for data_key, data_value in data_set.items():
+            data_string += str(data_key) + ':' + str(data_value) + ','
+        return data_string[:-1]
 
     def add_data(self, data_set):
-        for data in data_set:
-            for data_key, data_value in data.items():
-                print('Data: ' + str(data_key) + ' ' + str(data_value))
-                seek_byte_location = self.get_seek_location(str(data_value))
-                print('Seek Byte: ' + str(seek_byte_location * self._seek_byte_size))
-                self._seek.seek(seek_byte_location * self._seek_byte_size)
-                data_count = int(str(self._seek.read(int(self._seek_byte_size)).rstrip('\x00')))
-                self._seek.seek(seek_byte_location * self._seek_byte_size)
-                print('"' + str(self._seek.read(self._seek_byte_size)) + '"')
-                print('Data Count: ' + str(data_count))
-                data_file_location = os.path.join(self._data_directory, str(seek_byte_location) + '.vdb')
-                if data_count == 0:
-                    if not os.path.isfile(data_file_location):
-                        open(data_file_location, 'x')
-                data_file = open(data_file_location, 'a')
-                data_file.write(str(data_key) + ',' + str(data_value) + '|' + str(list(data_set)) + '\n')
-                data_file.close()
-                self._seek.seek(seek_byte_location * self._seek_byte_size)
-                self._seek.write(str(data_count + 1))
-                # self._data.seek(seek_byte_location)
-                # self._data.write(str(data_key) + '|' + str(data_value))
-                # self._data.seek(seek_byte_location + 32)
-                # self._data.write(str(list(data_set)))
-        # self._data.write('hello')
-        pass
+        for data_key, data_value in data_set.items():
+            print('Data: ' + str(data_key) + ' ' + str(data_value))
+            seek_location = self.get_seek_location(str(data_value))
+            print('Seek Byte: ' + str(seek_location * self._seek_byte_size))
+            data_count = self.read_seek_count(seek_location)
+            self._seek.seek(seek_location * self._seek_byte_size)
+            print('"' + str(self._seek.read(self._seek_byte_size)) + '"')
+            print('Data Count: ' + str(data_count))
+            data_file_location = os.path.join(self._data_directory, str(seek_location) + '.vdb')
+            if data_count == 0:
+                if not os.path.isfile(data_file_location):
+                    open(data_file_location, 'x')
+            data_file = open(data_file_location, 'a')
+            data_file.write(str(data_key) + ':' + str(data_value) + '|' + self.create_data_string(data_set) + '\n')
+            data_file.close()
+            self.write_seek_count(seek_location, data_count)
 
-    def read_seek(self):
-        pass
+    def read_seek_count(self, seek_location):
+        self._seek.seek(seek_location * self._seek_byte_size)
+        return int(str(self._seek.read(int(self._seek_byte_size)).rstrip('\x00')))
 
-    def write_seek(self):
-        pass
+    def write_seek_count(self, seek_location, data_count):
+        self._seek.seek(seek_location * self._seek_byte_size)
+        self._seek.write(str(data_count + 1))
 
     def get_seek_location(self, value):
         seek_location = 0
         seek_value = value[:self._seek_char_size]
         if value.isnumeric():
+            seek_value = seek_value.zfill(self._seek_char_size)
             seek_int_value = 0
             for x in range(self._seek_char_size):
                 if x < (self._seek_char_size - 1):

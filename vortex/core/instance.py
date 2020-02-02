@@ -39,7 +39,7 @@ class Instance:
     def input_as_string(self, value_str):
         self.thought = Thought(process(value_str))
         self.thought.process()
-        self.data.add_data(self.thought.get_data_set())
+        self.data.process_data(self.thought.get_data_set())
         if value_str == 'quit':
             self.run = False
 

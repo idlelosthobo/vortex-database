@@ -38,17 +38,24 @@ class Thought(Operation):
 
     def process(self):
         for sentence in self._sentences:
+            data_set = {}
             if sentence.input_identified:
+                data_set['data_set_type'] = 'input'
                 input_data_set = {}
                 for word in sentence.get_words():
                     input_data_set.update(word.get_data_set())
                 input_data_set['time_entered'] = self.generate_time_iteration()
-                self.data_set.append(dict(input_data_set))
+                data_set['data'] = input_data_set
+                self.data_set.append(dict(data_set))
 
             if sentence.output_identified:
+                data_set['data_set_type'] = 'output'
+                output_data_set = {}
                 for word in sentence.get_words():
-                    if not word.identified():
-                        print('Data: ' + word.raw_value)
+                    output_data_set.update(word.get_data_set())
+                output_data_set['time_requested'] = self.generate_time_iteration()
+                data_set['data'] = output_data_set
+                self.data_set.append(dict(data_set))
 
     def get_data_set(self):
         return self.data_set
