@@ -1,1 +1,4 @@
-BASIC_KEY
+BASIC_KEY = [
+
+
+]

@@ -1,5 +1,5 @@
 BASIC_INPUT = {
-    'i',
+    'i want',
     'there is',
 }
 

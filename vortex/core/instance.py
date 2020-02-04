@@ -7,6 +7,17 @@ from vortex.core.database import Database
 
 class Instance:
 
+    def __init__(self, _name):
+        self.name = _name
+        self.run = True
+        self.instance_directory = os.path.join(INSTANCES_DIRECTORY, str(self.name))
+        self.data_directory = os.path.join(self.instance_directory, 'data')
+        self.seek_file_location = os.path.join(self.instance_directory, 'seek.vsf')
+        self.seek = None
+        self.data = None
+        self.thought = None
+        self.setup()
+
     def setup(self):
         if os.path.isdir(INSTANCES_DIRECTORY):
             if not os.path.isdir(self.instance_directory):
@@ -22,19 +33,6 @@ class Instance:
             os.mkdir(self.data_directory)
 
         self.data = Database(self.seek_file_location, self.data_directory)
-
-        print(self.name)
-
-    def __init__(self, _name):
-        self.name = _name
-        self.run = True
-        self.instance_directory = os.path.join(INSTANCES_DIRECTORY, str(self.name))
-        self.data_directory = os.path.join(self.instance_directory, 'data')
-        self.seek_file_location = os.path.join(self.instance_directory, 'seek.vsf')
-        self.seek = None
-        self.data = None
-        self.thought = None
-        self.setup()
 
     def input_as_string(self, value_str):
         self.thought = Thought(process(value_str))
