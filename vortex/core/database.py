@@ -101,7 +101,7 @@ class Database:
         for data_key, data_value in data_set.items():
             seek_location = self.get_seek_location(str(data_value))
             data_count = self.read_seek_count(seek_location)
-            data_block = Block(seek_location, self._data_directory, data_count)
+            data_block = Block(seek_location, self._data_directory, data_key, data_value)
             data_block.write_data(data_key, data_value, data_set)
             self.write_seek_count(seek_location, data_count)
 
