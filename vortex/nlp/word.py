@@ -10,10 +10,11 @@ locale_actions = import_module(APP_NAME + '.locale.' + LOCALE + '.actions')
 
 class Word(Operation):
 
-    def __init__(self, _value):
+    def __init__(self, _value, _position):
         if config.debug:
             Operation.__init__(self)
         self.raw_value = _value
+        self.position = _position
         self.lower_value = _value.lower()
         self.trigger_value = _value.lower()
         self._quantified = False

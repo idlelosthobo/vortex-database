@@ -10,16 +10,21 @@ locale_output = import_module(APP_NAME + '.locale.' + LOCALE + '.output')
 
 class Sentence(Operation):
 
+
     def __init__(self, _value):
         self.raw_value = _value
         self.clean_value = self.clean(_value)
         self.trigger_value = ''
         self.input_identified = False
         self.output_identified = False
+        self.word_count = 0
         self._words = []
         split_words = str.split(self.clean_value, ' ')
+        word_position = 1
         for split_words_keyword, split_words_value in enumerate(split_words):
-            self._words.append(Word(split_words_value))
+            self._words.append(Word(split_words_value, word_position))
+            word_position += 1
+        self.word_count = word_position - 1
         for word in self._words:
             if word.identified() is True:
                 self.trigger_value += word.trigger_value + ' '
@@ -40,7 +45,7 @@ class Sentence(Operation):
         return self._words
 
     def get_word_count(self):
-        return len(self.words)
+        return self.word_count
 
     def understand(self):
         for word in self._words:
