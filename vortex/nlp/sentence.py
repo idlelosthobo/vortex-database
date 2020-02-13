@@ -10,7 +10,6 @@ locale_output = import_module(APP_NAME + '.locale.' + LOCALE + '.output')
 
 class Sentence(Operation):
 
-
     def __init__(self, _value):
         self.raw_value = _value
         self.clean_value = self.clean(_value)
