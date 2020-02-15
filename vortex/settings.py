@@ -16,6 +16,6 @@ ASSUMPTIVE_UNDERSTANDING = False
 # Once this is set you cannot change it as all timing in the system will stop working.
 TIME_ITERATION = 'hour'
 
-LOCALE = 'english_canada'
+LANGUAGE = 'english_canada'
 
 INSTANCES_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'instances')

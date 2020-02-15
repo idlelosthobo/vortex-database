@@ -4,8 +4,8 @@ from ..core import config
 from ..settings import APP_NAME, LOCALE
 from importlib import import_module
 
-locale_input = import_module(APP_NAME + '.locale.' + LOCALE + '.input')
-locale_output = import_module(APP_NAME + '.locale.' + LOCALE + '.output')
+locale_input = import_module(APP_NAME + '.loc.' + LOCALE + '.input')
+locale_output = import_module(APP_NAME + '.loc.' + LOCALE + '.output')
 
 
 class Sentence(Operation):

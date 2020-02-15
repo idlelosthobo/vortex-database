@@ -2,6 +2,7 @@ import os
 from ..settings import INSTANCES_DIRECTORY
 from ..api.string import process
 from ..nlp.thought import Thought
+from ..loc.locale import Locale
 from vortex.core.database import Database
 
 
@@ -15,7 +16,8 @@ class Instance:
         self.seek_file_location = os.path.join(self.instance_directory, 'seek.vsf')
         self.seek = None
         self.data = None
-        self.thought = None
+        self.Thought = None
+        self.Locale = None
         self.setup()
 
     def setup(self):
@@ -33,16 +35,18 @@ class Instance:
             os.mkdir(self.data_directory)
 
         self.data = Database(self.seek_file_location, self.data_directory)
+        self.Locale = Locale
 
     def input_as_string(self, value_str):
-        self.thought = Thought(process(value_str))
-        self.thought.process()
-        self.data.process_data(self.thought.get_data_set())
+        self.Thought = Thought(process(value_str))
+        self.Thought.process()
+        self.Thought = self.locale.process_thought(self.Thought)
+        self.data.process_data(self.Thought.get_data_set())
         if value_str == 'quit':
             self.run = False
 
     def result_as_string(self):
-        return self.thought.get_data_set()
+        return self.Thought.get_data_set()
 
     def __bool__(self):
         return self.run

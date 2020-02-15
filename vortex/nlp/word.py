@@ -1,11 +1,5 @@
 from ..nlp.operation import Operation
-from ..settings import APP_NAME, LOCALE
-from importlib import import_module
 from ..core import config
-
-locale_words = import_module(APP_NAME + '.locale.' + LOCALE + '.words')
-locale_quantify = import_module(APP_NAME + '.locale.' + LOCALE + '.quantify')
-locale_actions = import_module(APP_NAME + '.locale.' + LOCALE + '.actions')
 
 
 class Word(Operation):
@@ -32,6 +26,7 @@ class Word(Operation):
             self._plural = True
             self.trigger_value = _value[:-1].lower()
 
+        '''
         if self.trigger_value.isnumeric():
             self._number = True
             self._data_set['number'] = self.trigger_value
@@ -50,6 +45,7 @@ class Word(Operation):
                 self._data_set['unit'] = split_quantify[1]
             else:
                 self._data_set['object'] = self.trigger_value
+        '''
 
         if config.debug:
             debug = 'Word "' + self.raw_value + '" Identification: ' + str(self._identified)
