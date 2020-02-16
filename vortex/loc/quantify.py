@@ -5,4 +5,6 @@ class Quantify:
         self._value = _value
         self._type = _type
 
+    def get_word(self):
+        return self._word
 

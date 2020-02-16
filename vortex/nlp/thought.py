@@ -1,5 +1,5 @@
 from ..nlp.sentence import Sentence
-from ..nlp.operation import Operation
+from vortex.core.operation import Operation
 from ..core import config
 import time
 
@@ -21,8 +21,13 @@ class Thought(Operation):
         if config.debug:
             print('Thought created with ' + str(len(self._sentences)) + ' sentences.')
 
+        self._ideas = []
+
     def get_value(self):
         return self._value
+
+    def get_sentences(self):
+        return self._sentences
 
     def generate_time_iteration(self):
         if config.iteration() == 'second':
@@ -59,3 +64,6 @@ class Thought(Operation):
 
     def get_data_set(self):
         return self.data_set
+
+    def add_idea(self, idea):
+        self._ideas.append(idea)

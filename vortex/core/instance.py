@@ -35,13 +35,14 @@ class Instance:
             os.mkdir(self.data_directory)
 
         self.data = Database(self.seek_file_location, self.data_directory)
-        self.Locale = Locale
+        self.Locale = Locale()
+        self.Locale.print_words()
 
     def input_as_string(self, value_str):
         self.Thought = Thought(process(value_str))
-        self.Thought.process()
-        self.Thought = self.locale.process_thought(self.Thought)
-        self.data.process_data(self.Thought.get_data_set())
+        self.Thought = self.Locale.process_thought(self.Thought)
+        # self.Thought.process()
+        # self.data.process_data(self.Thought.get_data_set())
         if value_str == 'quit':
             self.run = False
 

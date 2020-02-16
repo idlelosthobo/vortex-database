@@ -5,6 +5,7 @@ from vortex.loc.action import Action as Ac
 intentions = [
     In('i want', 'store'),
     In('how many', 'retrieve'),
+    In('tell me about', 'retrieve'),
 ]
 
 # We use 0 to 10 on abstract quantification
@@ -24,5 +25,6 @@ quantifies = [
 ]
 
 actions = [
-    Ac('total', 'sum')
+    Ac('total', 'sum'),
+    Ac('remove', 'subtract'),
 ]
