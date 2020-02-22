@@ -7,29 +7,28 @@ class Word(Operation):
     def __init__(self, _value, _position):
         if config.debug:
             Operation.__init__(self)
-        self.raw_value = _value
-        self.position = _position
-        self.lower_value = _value.lower()
-        self.trigger_value = _value.lower()
+        self._raw_value = _value
+        self._position = _position
+        self._lower_value = _value.lower()
+        self._trigger_value = _value.lower()
         self._plural = False
         self._number = False
-        self._data_set = {}
 
-        if len(self.lower_value) > 2 and self.lower_value[-2:] != 'ss' and self.lower_value[-1:] == 's':
+        if len(self._lower_value) > 2 and self._lower_value[-2:] != 'ss' and self._lower_value[-1:] == 's':
             self._plural = True
-            self.trigger_value = _value[:-1].lower()
+            self._trigger_value = _value[:-1].lower()
 
-        if self.trigger_value.isnumeric():
+        if self._trigger_value.isnumeric():
             self._number = True
 
-    def get_trigger_value(self):
-        return self.trigger_value
+    def trigger_value(self):
+        return self._trigger_value
 
-    def get_data_set(self):
-        return self._data_set
+    def raw_value(self):
+        return self._raw_value
 
-    def plural(self):
+    def is_number(self):
+        return self._number
+
+    def is_plural(self):
         return self._plural
-
-    def get_raw_value(self):
-        return self.raw_value

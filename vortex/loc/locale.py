@@ -1,5 +1,6 @@
 from importlib import import_module
 from ..settings import APP_NAME, LANGUAGE
+from vortex.nlp.idea import Idea
 
 
 class Locale:
@@ -27,10 +28,16 @@ class Locale:
 
     def process_thought(self, thought_obj):
         thought = thought_obj
+        idea = Idea
         for sentence in thought.get_sentences():
             # print('"' + sentence.get_value() + '"')
             for word in sentence.get_words():
-                print(word.get_raw_value())
+                if word.is_number():
+                    print(word.raw_value() + ' is a Number')
+                elif word.trigger_value() in self.all_words:
+                    print(word.raw_value() + ' identified')
+                else:
+                    print(word.raw_value() + ' not identified')
         return thought
 
     def get_word_value(self, word):
@@ -38,6 +45,5 @@ class Locale:
             return True
 
     def print_words(self):
-        pass
-        # print('Words...')
-        # print(self.all_words)
+        print('Words...')
+        print(self.all_words)
