@@ -25,14 +25,19 @@ class Locale:
             self.all_words.add(quantify.get_word())
             self.quantify_words.add(quantify.get_word())
 
-
     def process_thought(self, thought_obj):
         thought = thought_obj
         for sentence in thought.get_sentences():
-            print(sentence.raw_value)
+            # print('"' + sentence.get_value() + '"')
+            for word in sentence.get_words():
+                print(word.get_raw_value())
         return thought
 
+    def get_word_value(self, word):
+        if word in self.all_words:
+            return True
 
     def print_words(self):
-        print('Words...')
-        print(self.all_words)
+        pass
+        # print('Words...')
+        # print(self.all_words)

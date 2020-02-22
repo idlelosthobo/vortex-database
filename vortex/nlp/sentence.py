@@ -7,7 +7,8 @@ class Sentence(Operation):
 
     def __init__(self, _value):
         self.raw_value = _value
-        self.clean_value = self.clean(_value)
+        self.clean_value = ''
+        self.clean()
         self.word_count = 0
         self._words = []
         split_words = str.split(self.clean_value, ' ')
@@ -17,8 +18,11 @@ class Sentence(Operation):
             word_position += 1
         self.word_count = word_position - 1
 
-    def get_value(self):
-        return self.raw_value
+    def get_value(self, raw=False):
+        if raw:
+            return self.raw_value
+        else:
+            return self.clean_value
 
     def get_words(self):
         return self._words
@@ -26,9 +30,9 @@ class Sentence(Operation):
     def get_word_count(self):
         return self.word_count
 
-    def clean(self, value):
-        clean_value = value.replace(',', '')
-        clean_value = clean_value.replace('"', '')
-        clean_value = clean_value.strip()
-        return clean_value
+    def clean(self):
+        self.clean_value = self.raw_value.replace(',', '')
+        self.clean_value = self.clean_value.replace('"', '')
+        self.clean_value = self.clean_value.replace('  ', ' ')
+        self.clean_value = self.clean_value.strip()
 
