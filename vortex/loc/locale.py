@@ -1,6 +1,7 @@
 from importlib import import_module
 from ..settings import APP_NAME, LANGUAGE
 from vortex.nlp.idea import Idea
+import itertools
 
 
 class Locale:
@@ -28,17 +29,30 @@ class Locale:
 
     def process_thought(self, thought_obj):
         thought = thought_obj
-        idea = Idea
+        ideas = list()
         for sentence in thought.get_sentences():
+            new_idea = Idea
+            stripped_sentence = ''
             # print('"' + sentence.get_value() + '"')
             for word in sentence.get_words():
                 if word.is_number():
+                    new_idea.add_data('number', word.trigger_value())
                     print(word.raw_value() + ' is a Number')
                 elif word.trigger_value() in self.all_words:
                     print(word.raw_value() + ' identified')
+                    stripped_sentence += word.trigger_value() + ' '
                 else:
                     print(word.raw_value() + ' not identified')
+                    new_idea.add_data('object', word.trigger_value())
+
         return thought
+
+    def get_intention(self, stripped_sentence):
+        pass
+
+    def compare_statement(self, stripped_sentence, segment):
+        words = stripped_sentence.split(' ')
+        word_count = len(words)
 
     def get_word_value(self, word):
         if word in self.all_words:
