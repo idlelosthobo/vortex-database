@@ -7,7 +7,7 @@ class Idea:
         self._store_weight = 0
         self._retrieve_weight = 0
         self._database_action = None
-        self._data_set = DataSet
+        self._data_set = DataSet()
 
     def evaluate_action(self, action):
         if action == 'store':

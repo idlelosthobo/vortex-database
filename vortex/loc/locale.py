@@ -31,7 +31,7 @@ class Locale:
         thought = thought_obj
         ideas = list()
         for sentence in thought.get_sentences():
-            new_idea = Idea
+            new_idea = Idea()
             stripped_sentence = ''
             # print('"' + sentence.get_value() + '"')
             for word in sentence.get_words():
@@ -44,15 +44,46 @@ class Locale:
                 else:
                     print(word.raw_value() + ' not identified')
                     new_idea.add_data('object', word.trigger_value())
-
+            if len(stripped_sentence) > 0:
+                for intention in self._language.intentions:
+                    if self.compare_statement(stripped_sentence, intention.sentence_segment()):
+                        new_idea.evaluate_action(intention.database_action())
+            print('Idea Database Action: ' + new_idea.get_database_action())
         return thought
 
     def get_intention(self, stripped_sentence):
         pass
 
-    def compare_statement(self, stripped_sentence, segment):
-        words = stripped_sentence.split(' ')
-        word_count = len(words)
+    def compare_statement(self, stripped_sentence, sentence_segment):
+        match = False
+        if stripped_sentence.strip() == sentence_segment:
+            match = True
+        else:
+            words = stripped_sentence.strip().split(' ')
+            word_count = len(words)
+            word_iter_str = ''
+            for x in range(word_count):
+                word_iter_str += str(x)
+            # print(word_iter_str)
+            # print(word_count)
+            # # print('"' + stripped_sentence + '"')
+            for y in range(word_count):
+                word_combinations = itertools.combinations(word_iter_str, y + 1)
+                # print(list(word_combinations))
+                for combination in word_combinations:
+                    sentence_segment_combination = ''
+                    # print(combination)
+                    for z in range(len(combination)):
+                        sentence_segment_combination += words[int(combination[z])] + ' '
+                    # print(sentence_segment_combination.strip())
+                    if sentence_segment_combination.strip() == sentence_segment:
+                        match = True
+        print(sentence_segment + ' Match: ' + str(match))
+        return match
+
+    def advanced_compare_statement(self, stripped_sentence, sentence_segment):
+        # This would compare iterated versions in both directions and make a assumption on intention
+        pass
 
     def get_word_value(self, word):
         if word in self.all_words:

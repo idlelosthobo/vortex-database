@@ -14,3 +14,5 @@ class Intention:
         words = self._sentence_segment.split(' ')
         return words
 
+    def database_action(self):
+        return self._database_action
