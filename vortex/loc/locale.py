@@ -49,6 +49,7 @@ class Locale:
                     if self.compare_statement(stripped_sentence, intention.sentence_segment()):
                         new_idea.evaluate_action(intention.database_action())
             print('Idea Database Action: ' + new_idea.get_database_action())
+            ideas.append(new_idea)
         return thought
 
     def get_intention(self, stripped_sentence):
