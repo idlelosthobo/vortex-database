@@ -4,6 +4,10 @@
 - Uses a abstract storage method for fast retrieval.
 - Self contained portable design for all projects.
 
+# Why
+- Provide database technology that is more accessible to all projects.
+- Lower the barrier to entry into formatted data storage.
+
 # Usage
 
     import vortex.core.instance as vortex
