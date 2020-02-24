@@ -5,24 +5,21 @@ import os
 
 class Block:
 
-    def __init__(self, _location, _data_directory, _data_key, _data_value):
+    def __init__(self, _location, _data_directory, _data_count, _data_key, _data_value):
         self._location = _location
         self._data_file_location = os.path.join(_data_directory, str(self._location) + '.vdb')
         self._data_file = None
         self._data_lines = None
         self._data_key = str(_data_key)
         self._data_value = str(_data_value)
-        self._data_count = 0
-        if self._target_count == 0:
+        self._data_count = _data_count
+        if self._data_count == 0:
             if not os.path.isfile(self._data_file_location):
                 open(self._data_file_location, 'x')
 
-    def __del__(self):
-        self._data_file.close()
-
-    def write_data(self, data_key, data_value, data_set):
+    def write_data(self, data_key, data_value, data_set_str):
         self._data_file = open(self._data_file_location, 'a')
-        self._data_file.write(str(data_key) + ':' + str(data_value) + '|' + self.create_data_string(data_set) + '\n')
+        self._data_file.write(str(data_key) + ':' + str(data_value) + '|' + str(data_set_str) + '\n')
 
     def read_data(self):
         self._data_file = open(self._data_file_location, 'r')
@@ -37,12 +34,6 @@ class Block:
                     data = set_data.split(':')
                     if data[0] == 'number':
                         self._data_count += int(data[1])
-
-    def create_data_string(self, data_set):
-        data_string = ''
-        for data_key, data_value in data_set.items():
-            data_string += str(data_key) + ':' + str(data_value) + ','
-        return data_string[:-1]
 
     def get_count(self):
         return self._data_count

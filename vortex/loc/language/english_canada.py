@@ -15,16 +15,18 @@ quantifies = [
     Qu('like', 7, 'rating'),
     Qu('amazing', 10, 'rating'),
     Qu('hate', 0, 'rating'),
-    Qu('a', 1, 'object'),
-    Qu('dozen', 12, 'object'),
-    Qu('bunch', 6, 'object'),
+    Qu('a', 1, 'number'),
+    Qu('dozen', 12, 'number'),
+    Qu('bunch', 6, 'number'),
     Qu('barrel', 200, 'litre'),
     Qu('feet', 12, 'inch'),
-    Qu('some', 5, 'object'),
+    Qu('some', 5, 'number'),
     Qu('spectacular', 9, 'rating'),
 ]
 
 actions = [
     Ac('total', 'sum'),
     Ac('remove', 'subtract'),
+    Ac('long', 'measure'),
+    Ac('when', 'time'),
 ]

@@ -8,3 +8,8 @@ class Quantify:
     def get_word(self):
         return self._word
 
+    def value(self):
+        return self._value
+
+    def type(self):
+        return self._type

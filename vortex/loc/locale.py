@@ -27,7 +27,7 @@ class Locale:
             self.all_words.add(quantify.get_word())
             self.quantify_words.add(quantify.get_word())
 
-    def process_thought(self, thought_obj):
+    def thought_to_ideas(self, thought_obj):
         thought = thought_obj
         ideas = list()
         for sentence in thought.get_sentences():
@@ -37,20 +37,34 @@ class Locale:
             for word in sentence.get_words():
                 if word.is_number():
                     new_idea.add_data('number', word.trigger_value())
-                    print(word.raw_value() + ' is a Number')
+                    # print(word.raw_value() + ' is a Number')
                 elif word.trigger_value() in self.all_words:
-                    print(word.raw_value() + ' identified')
+                    # print(word.raw_value() + ' identified')
                     stripped_sentence += word.trigger_value() + ' '
                 else:
-                    print(word.raw_value() + ' not identified')
+                    # print(word.raw_value() + ' not identified')
                     new_idea.add_data('object', word.trigger_value())
             if len(stripped_sentence) > 0:
+                intention_found = False
+                action_found = False
+                quantify_found = False
                 for intention in self._language.intentions:
                     if self.compare_statement(stripped_sentence, intention.sentence_segment()):
                         new_idea.evaluate_action(intention.database_action())
+                        intention_found = True
+                if not intention_found:
+                    for action in self._language.actions:
+                        if self.compare_statement(stripped_sentence, action.get_word()):
+                            pass
+                            action_found = True
+                if not action_found:
+                    for quantify in self._language.quantifies:
+                        if self.compare_statement(stripped_sentence, quantify.get_word()):
+                            new_idea.add_data(quantify.type(), quantify.value())
+                            quantify_found = True
             print('Idea Database Action: ' + new_idea.get_database_action())
             ideas.append(new_idea)
-        return thought
+        return ideas
 
     def get_intention(self, stripped_sentence):
         pass

@@ -56,13 +56,6 @@ class Database:
             print('Database ' + str(location) + ' Header Validated: ' + str(header_validated))
         return header_validated
 
-    def process_data(self, data_set):
-        for data in data_set:
-            if data['data_set_type'] == 'input':
-                self.add_data(dict(data['data']))
-            elif data['data_set_type'] == 'output':
-                self.get_data(dict(data['data']))
-
     def get_data(self, data_set):
         for data_key, data_value in data_set.items():
             seek_location = self.get_seek_location(str(data_value))
@@ -90,6 +83,16 @@ class Database:
                 print('Get: Number Count: ' + str(number_count))
             else:
                 print('No data available on this request')
+
+    def store_data_set(self, data_set_obj):
+        data_items = data_set_obj.get_data_items()
+        for item in data_items:
+            seek_location = self.get_seek_location(str(item.value()))
+            data_count = self.read_seek_count(seek_location)
+            data_block = Block(seek_location, self._data_directory, int(data_count), item.key(), item.value())
+            data_block.write_data(item.key(), item.value(), data_set_obj.get_data_set_string())
+
+            self.write_seek_count(seek_location, data_count)
 
     def create_data_string(self, data_set):
         data_string = ''

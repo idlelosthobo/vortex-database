@@ -12,7 +12,7 @@ class DataSet:
     def get_data_items(self):
         return self._data_items
 
-    def get_dataset_string(self):
+    def get_data_set_string(self):
         data_string = ''
         for data in self._data_items:
             data_string += str(data.key()) + ':' + str(data.value()) + ','

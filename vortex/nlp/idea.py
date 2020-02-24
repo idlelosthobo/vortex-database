@@ -1,4 +1,5 @@
 from ..core.dataset import DataSet
+from ..core import config
 
 
 class Idea:
@@ -8,6 +9,9 @@ class Idea:
         self._retrieve_weight = 0
         self._database_action = None
         self._data_set = DataSet()
+        self._data_set.add_data_item('time_entered', config.time_now())
+        self._processed = False
+        self._result = None
 
     def evaluate_action(self, action):
         if action == 'store':
@@ -33,3 +37,17 @@ class Idea:
     def add_data(self, key, value):
         self._data_set.add_data_item(key, value)
 
+    def get_data_set(self):
+        return self._data_set
+
+    def set_processed(self):
+        self._processed = True
+
+    def is_processed(self):
+        return self._processed
+
+    def set_result(self, result=''):
+        self._result = result
+
+    def get_result(self):
+        return self._result

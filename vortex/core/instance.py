@@ -3,7 +3,8 @@ from ..settings import INSTANCES_DIRECTORY
 from ..api.string import process
 from ..nlp.thought import Thought
 from ..loc.locale import Locale
-from vortex.core.database import Database
+from ..core.database import Database
+from ..core.act import Act
 
 
 class Instance:
@@ -40,7 +41,10 @@ class Instance:
 
     def input_as_string(self, value_str):
         self.Thought = Thought(process(value_str))
-        self.Thought = self.Locale.process_thought(self.Thought)
+        ideas = self.Locale.thought_to_ideas(self.Thought)
+        act = Act(self.data, ideas)
+        act.process()
+        act.display_results()
         # self.Thought.process()
         # self.data.process_data(self.Thought.get_data_set())
         if value_str == 'quit':
