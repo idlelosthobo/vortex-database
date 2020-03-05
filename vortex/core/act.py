@@ -8,12 +8,18 @@ class Act:
     def process(self):
         for idea in self._ideas:
             if idea.get_database_action() == 'store':
-                self._database.store_data_set(idea.get_data_set())
-                idea.set_result('Written to Database')
+                self.store_idea(idea)
             elif idea.get_database_action() == 'retrieve':
-                pass
+                self.retrieve_from_idea(idea)
             print('Idea Processed '+str(idea.is_processed()))
             self._processed_ideas.append(idea)
+
+    def store_idea(self, idea):
+        self._database.store_data_set(idea.get_data_set())
+        idea.set_result('Written to Database')
+
+    def retrieve_from_idea(self, idea):
+        pass
 
     def display_results(self):
         for idea in self._processed_ideas:
