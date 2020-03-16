@@ -29,4 +29,6 @@ actions = [
     Ac('remove', 'subtract'),
     Ac('long', 'measure'),
     Ac('when', 'time'),
+    Ac('want', 'possess'),
+    Ac('have', 'possess'),
 ]

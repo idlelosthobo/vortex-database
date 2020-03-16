@@ -56,31 +56,35 @@ class Database:
             print('Database ' + str(location) + ' Header Validated: ' + str(header_validated))
         return header_validated
 
-    def get_data(self, data_set):
-        for data_key, data_value in data_set.items():
-            seek_location = self.get_seek_location(str(data_value))
+    def get_data(self, data_set_obj):
+        data_items = data_set_obj.get_data_items()
+        for item in data_items:
+            seek_location = self.get_seek_location(str(item.value()))
             print('Get: Seek Location: ' + str(seek_location))
             data_count = self.read_seek_count(seek_location)
             print('Get: Data Count: ' + str(data_count))
             if data_count > 0:
-                data_file_location = os.path.join(self._data_directory, str(seek_location) + '.vdb')
-                data_file = open(data_file_location, 'r')
-                data_lines = data_file.readlines()
-                number_count = 0
-                for line in data_lines:
-                    print(line)
-                    get_data_set = line.split('|')
-                    get_data_set_type = get_data_set[0].split(':')
-                    get_data_type = get_data_set_type[0]
-                    get_data_value = get_data_set_type[1]
-                    get_data_set_data = get_data_set[1].split(',')
-                    for set_data in get_data_set_data:
-                        data = set_data.split(':')
-                        if data[0] == 'number':
-                            number_count += int(data[1])
-                    print('Get: Line: ' + get_data_set[0])
-                    print('Get: Line: ' + get_data_set[1])
-                print('Get: Number Count: ' + str(number_count))
+                data_block = Block(seek_location, self._data_directory, data_count)
+                data_block.read_data(item.key(), item.value())
+                return data_block.get_data_set_list()
+                # data_file_location = os.path.join(self._data_directory, str(seek_location) + '.vdb')
+                # data_file = open(data_file_location, 'r')
+                # data_lines = data_file.readlines()
+                # number_count = 0
+                # for line in data_lines:
+                #     print(line)
+                #     get_data_set = line.split('|')
+                #     get_data_set_type = get_data_set[0].split(':')
+                #     get_data_type = get_data_set_type[0]
+                #     get_data_value = get_data_set_type[1]
+                #     get_data_set_data = get_data_set[1].split(',')
+                #     for set_data in get_data_set_data:
+                #         data = set_data.split(':')
+                #         if data[0] == 'number':
+                #             number_count += int(data[1])
+                #     print('Get: Line: ' + get_data_set[0])
+                #     print('Get: Line: ' + get_data_set[1])
+                # print('Get: Number Count: ' + str(number_count))
             else:
                 print('No data available on this request')
 
@@ -89,7 +93,7 @@ class Database:
         for item in data_items:
             seek_location = self.get_seek_location(str(item.value()))
             data_count = self.read_seek_count(seek_location)
-            data_block = Block(seek_location, self._data_directory, int(data_count), item.key(), item.value())
+            data_block = Block(seek_location, self._data_directory, int(data_count))
             data_block.write_data(item.key(), item.value(), data_set_obj.get_data_set_string())
 
             self.write_seek_count(seek_location, data_count)
@@ -100,13 +104,13 @@ class Database:
             data_string += str(data_key) + ':' + str(data_value) + ','
         return data_string[:-1]
 
-    def add_data(self, data_set):
-        for data_key, data_value in data_set.items():
-            seek_location = self.get_seek_location(str(data_value))
-            data_count = self.read_seek_count(seek_location)
-            data_block = Block(seek_location, self._data_directory, data_key, data_value)
-            data_block.write_data(data_key, data_value, data_set)
-            self.write_seek_count(seek_location, data_count)
+    # def add_data(self, data_set):
+    #     for data_key, data_value in data_set.items():
+    #         seek_location = self.get_seek_location(str(data_value))
+    #         data_count = self.read_seek_count(seek_location)
+    #         data_block = Block(seek_location, self._data_directory, data_key, data_value)
+    #         data_block.write_data(data_key, data_value, data_set)
+    #         self.write_seek_count(seek_location, data_count)
 
     def read_seek_count(self, seek_location):
         self._seek.seek((seek_location * self._seek_byte_size) + self._header_byte_size)

@@ -52,17 +52,16 @@ class Locale:
                     if self.compare_statement(stripped_sentence, intention.sentence_segment()):
                         new_idea.evaluate_action(intention.database_action())
                         intention_found = True
-                if not intention_found:
-                    for action in self._language.actions:
-                        if self.compare_statement(stripped_sentence, action.get_word()):
-                            pass
-                            action_found = True
+                for action in self._language.actions:
+                    if self.compare_statement(stripped_sentence, action.get_word()):
+                        new_idea.add_data(action.key(), action.value())
+                        action_found = True
                 if not action_found:
                     for quantify in self._language.quantifies:
                         if self.compare_statement(stripped_sentence, quantify.get_word()):
                             new_idea.add_data(quantify.type(), quantify.value())
                             quantify_found = True
-            print('Idea Database Action: ' + new_idea.get_database_action())
+            print('Idea Database Action: ' + str(new_idea.get_database_action()))
             ideas.append(new_idea)
         return ideas
 
@@ -93,7 +92,7 @@ class Locale:
                     # print(sentence_segment_combination.strip())
                     if sentence_segment_combination.strip() == sentence_segment:
                         match = True
-        print(sentence_segment + ' Match: ' + str(match))
+        # print(sentence_segment + ' Match: ' + str(match))
         return match
 
     def advanced_compare_statement(self, stripped_sentence, sentence_segment):
