@@ -22,7 +22,7 @@ class DataBlock:
 
     def read_data(self, data_key, data_value):
         self._data_file = open(self._data_file_location, 'r')
-        self._data_lines = self._data_file.readlines()
+        self._data_lines = self._data_file.read().splitlines()
         self._data_count = len(self._data_lines)
         for line in self._data_lines:
             get_data_set = line.split('|')

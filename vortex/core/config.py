@@ -1,6 +1,6 @@
 from ..settings import DEBUG, ADVANCED_PROCESSING, ASSUMPTIVE_UNDERSTANDING, TIME_ITERATION, APP_VERSION, \
-    APP_NAME
-import time
+    APP_NAME, SEEK_CHARACTER_SIZE, INSTANCES_DIRECTORY
+import time, os
 
 
 def debug():
@@ -28,9 +28,32 @@ def time_now():
         return round(time.time() / 60 / 60)
     elif time_iteration() == 'day':
         return round(time.time() / 60 / 60 / 24)
+    elif time_iteration() == 'week':
+        return round(time.time() / 60 / 60 / 24 / 7)
 
 
 def file_header():
-    header = 'application: ' + APP_NAME + ' version: ' + APP_VERSION + ' time: ' + TIME_ITERATION
-    return header
+    header = 'Application: ' + APP_NAME + ' Version: ' + APP_VERSION + ' Time Iteration: ' + TIME_ITERATION
+    return str(header)
 
+
+def check_file_header(file, location):
+    file_header_size = len(file_header())
+    if os.stat(location).st_size == 0:
+        file.seek(0)
+        file.write(file_header())
+        file.seek(0)
+        header_validated = True
+    else:
+        file.seek(0)
+        header = file.read(file_header_size)
+        if header == file_header():
+            header_validated = True
+        else:
+            header_validated = False
+    return header_validated
+
+
+def seek_character_size():
+    if 0 < SEEK_CHARACTER_SIZE <= 4:
+        return SEEK_CHARACTER_SIZE
