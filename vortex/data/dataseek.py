@@ -41,8 +41,9 @@ class DataSeek:
 
     def get_seek_location(self, value):
         seek_location = 0
-        seek_value = value[:self._seek_char_size]
         if value.isnumeric():
+            # Use the last digits of a number
+            seek_value = value[(self._seek_char_size * -1):]
             seek_value = seek_value.zfill(self._seek_char_size)
             seek_int_value = 0
             for x in range(self._seek_char_size):
@@ -63,6 +64,7 @@ class DataSeek:
             if config.debug():
                 print("Seek Location: " + seek_value + ' ' + str(seek_int_value))
         else:
+            seek_value = value[:self._seek_char_size]
             seek_char_value = 0
             for x in range(len(seek_value)):
                 if x < (self._seek_char_size - 1):
