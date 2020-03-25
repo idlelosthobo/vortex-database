@@ -14,3 +14,12 @@ class Memory:
 
     def get_data_set_list(self):
         return self._data_set_list
+
+    def debug_to_print(self):
+        print('Memory->Context: '+self._context_data_set.get_data_set_string())
+        if self._data_set_list is None:
+            print('Memory->Dat Set: False')
+        else:
+            # print('Memory->Data Set Count: '+len(self._data_set_list))
+            for data_set in self._data_set_list:
+                print('Memory->Data Set Info: '+data_set.get_data_set_string())

@@ -1,6 +1,6 @@
 import os
 from vortex.core import config
-from vortex.core.block import Block
+from vortex.data.datablock import DataBlock
 
 
 class Database:
@@ -64,7 +64,7 @@ class Database:
             data_count = self.read_seek_count(seek_location)
             print('Get: Data Count: ' + str(data_count))
             if data_count > 0:
-                data_block = Block(seek_location, self._data_directory, data_count)
+                data_block = DataBlock(seek_location, self._data_directory, data_count)
                 data_block.read_data(item.key(), item.value())
                 return data_block.get_data_set_list()
                 # data_file_location = os.path.join(self._data_directory, str(seek_location) + '.vdb')
@@ -93,16 +93,16 @@ class Database:
         for item in data_items:
             seek_location = self.get_seek_location(str(item.value()))
             data_count = self.read_seek_count(seek_location)
-            data_block = Block(seek_location, self._data_directory, int(data_count))
+            data_block = DataBlock(seek_location, self._data_directory, int(data_count))
             data_block.write_data(item.key(), item.value(), data_set_obj.get_data_set_string())
 
             self.write_seek_count(seek_location, data_count)
 
-    def create_data_string(self, data_set):
-        data_string = ''
-        for data_key, data_value in data_set.items():
-            data_string += str(data_key) + ':' + str(data_value) + ','
-        return data_string[:-1]
+    # def create_data_string(self, data_set):
+    #     data_string = ''
+    #     for data_key, data_value in data_set.items():
+    #         data_string += str(data_key) + ':' + str(data_value) + ','
+    #     return data_string[:-1]
 
     # def add_data(self, data_set):
     #     for data_key, data_value in data_set.items():

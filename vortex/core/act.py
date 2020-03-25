@@ -25,6 +25,8 @@ class Act:
     def retrieve_from_idea(self, idea):
         memory = Memory(idea.get_data_set())
         memory.set_data_set_list(self._database.get_data(idea.get_data_set()))
+        memory.debug_to_print()
+        self._memory_list.append(memory)
 
     def display_results(self):
         for idea in self._processed_ideas:

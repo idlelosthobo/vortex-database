@@ -1,9 +1,9 @@
 import os
-from ..core.dataset import DataSet
+from vortex.data.dataset import DataSet
 # this is the class that loads up a vdb file and operates it.
 
 
-class Block:
+class DataBlock:
 
     def __init__(self, _location, _data_directory, _data_count):
         self._location = _location
@@ -29,12 +29,12 @@ class Block:
             get_data_set_type = get_data_set[0].split(':')
             if data_key == get_data_set_type[0] and data_value == get_data_set_type[1]:
                 get_data_set_data = get_data_set[1].split(',')
+                data_set = DataSet()
                 for set_data in get_data_set_data:
                     data = set_data.split(':')
-                    data_set = DataSet()
                     data_set.add_data_item(data[0], data[1])
-                    print('Get: Key: ' + data[0])
-                    print('Get: Value: ' + data[1])
+                    # print('Get: Key: ' + data[0])
+                    # print('Get: Value: ' + data[1])
                     # print('Get: Number Count: ' + str(number_count))
                 self._data_set_list.append(data_set)
 

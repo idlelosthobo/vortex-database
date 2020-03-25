@@ -1,4 +1,4 @@
-from ..core.dataset import DataSet
+from vortex.data.dataset import DataSet
 from ..core import config
 
 

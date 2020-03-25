@@ -8,3 +8,5 @@ Information to use on a thought to determine the intention of the thought.
 Resulting plan from processing a thought through the locale & language system.
 # Act
 Taking the idea and turning it into a processable action.
+# Memory
+Returned data from acting on an idea that required a database output.

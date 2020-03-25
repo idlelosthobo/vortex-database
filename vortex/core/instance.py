@@ -3,7 +3,7 @@ from ..settings import INSTANCES_DIRECTORY
 from ..api.string import process
 from ..nlp.thought import Thought
 from ..loc.locale import Locale
-from ..core.database import Database
+from vortex.data.database import Database
 from ..core.act import Act
 
 

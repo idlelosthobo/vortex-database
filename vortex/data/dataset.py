@@ -1,4 +1,4 @@
-from ..core.dataitem import DataItem
+from vortex.data.dataitem import DataItem
 
 
 class DataSet:
