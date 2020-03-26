@@ -5,7 +5,7 @@ APP_NAME = 'vortex'
 # Note changing file versions should only be used after refactoring the data file.
 APP_VERSION = '0.1a'
 
-DEBUG = True
+APP_DEBUG = False
 
 ADVANCED_PROCESSING = False
 
